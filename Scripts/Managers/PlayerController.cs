@@ -9,8 +9,6 @@ namespace Castle
 {
     public class PlayerController : MonoBehaviour
     {
-
-        private float mTowerSwitchOffsetY = DataConfigure.TOWER_SWITCH_OFFSET_Y;
         private float mChangeColorTime = DataConfigure.TIME_COLOR_CHANGE;
         private float mActiveTowerSwitchTime = DataConfigure.TIME_TOWER_SWITCH_ACTIVE;
         private string towerBaseTag = DataConfigure.TAG_TOWERBASE;
@@ -19,27 +17,31 @@ namespace Castle
         public EventSystem mEventSystem;
         public Canvas[] mBlockRayCanvas;
 
-        // Use this for initialization
-        void Start()
-        {
+        private Hero mHero;
+        public ScrollCircle mJoystick;
 
+        private void Start()
+        {
+            mHero = GetHero();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-
-            if (false == CheckGUIRayCastObjects())
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
+            if (false == CheckGUIRayCastObjects()) {
+                if (Input.GetMouseButtonDown(0)) {
                     CheckSelect();
                 }
-            }
-
+            } 
         }
 
-        void CheckSelect()
+        private void FixedUpdate()
+        {
+            if (null != mHero) {
+                MoveHero();
+            }
+        }
+
+        private void CheckSelect()
         {
             RaycastHit raycastHit;
             Ray selectRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -52,21 +54,15 @@ namespace Castle
                     if (towerBaseMaterial != null)
                     {
                         StartCoroutine(UIManager.ChangeColorForAWhile(towerBaseMaterial, Color.gray, mChangeColorTime));
-                        //StartCoroutine(UIManager.ActiveDeadThingForAWhile(towerBaseCanvas.gameObject, 1));
                     }
-
-                    //Transform towerBaseCanvas = raycastHit.transform.Find("TowerSwitchCanvas")
-
-                    Vector3 towerSwitchPos = raycastHit.transform.position;
-                    towerSwitchPos.y += mTowerSwitchOffsetY;
-                    StartCoroutine(mUIManager.ActiveTowerSwitch(towerSwitchPos, Quaternion.LookRotation(selectRay.direction), mActiveTowerSwitchTime));
+                    
+                    StartCoroutine(mUIManager.ActiveTowerSwitch(raycastHit.transform, Quaternion.LookRotation(selectRay.direction), mActiveTowerSwitchTime));
                 }
             }
         }
 
-
         // Solve ray penetrate ui objects
-        bool CheckGUIRayCastObjects()
+        private bool CheckGUIRayCastObjects()
         {
             PointerEventData eventData = new PointerEventData(mEventSystem);
             eventData.pressPosition = Input.mousePosition;
@@ -79,6 +75,50 @@ namespace Castle
             }
 
             return raycastResults.Count > 0;
+        }
+    
+        private Hero GetHero()
+        {
+            if (null != GameObject.FindWithTag(DataConfigure.TAG_HERO))
+            {
+                return GameObject.FindWithTag(DataConfigure.TAG_HERO).GetComponent<Hero>();
+            }
+            return null;
+        }
+
+        private void MoveHero()
+        {
+            if (mJoystick.GetJoystickDirection() != Vector2.zero) {
+                mHero.OnMove(mJoystick.GetJoystickDirection());
+            }
+            else {
+                mHero.NoMove();
+            }
+        }
+
+        private void OnSkill(SKILL skillIndex)
+        {
+            mHero.OnSkill(skillIndex);
+        }
+
+        public void OnAttack()
+        {
+            mHero.OnAttack();
+        }
+
+        public void OnSkillOne()
+        {
+            OnSkill(SKILL.ONE);
+        }
+
+        public void OnSkillTwo()
+        {
+            OnSkill(SKILL.TWO);
+        }
+
+        public void OnSkillThree()
+        {
+            OnSkill(SKILL.THREE);
         }
     }
 }

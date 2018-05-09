@@ -1,56 +1,71 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Castle
 {
+    using TOWER_TYPE = DataConfigure.CustomDataType.TOWER_TYPE;
     public class BuildManager : MonoBehaviour
     {
+        // public UIManager mUIManager;
 
-        public UIManager mUIManager;
+        //public TowerData mAcidTowerPrefab;
+        //public TowerData mGatlingTowerPrefab;
 
-        public TowerData mAcidTowerPrefab;
-        public TowerData mGatlingTowerPrefab;
+        //private TowerData mSelectedTower;
+        private static float mTowerInstanceOffsetY = DataConfigure.TOWER_INSTANCE_OFFSET_Y;
 
-        private TowerData mSelectedTower;
-        private float mTowerInstanceOffsetY = DataConfigure.TOWER_INSTANCE_OFFSET_Y;
+        //private void BuildTower(Tower selectTower, Vector3 pos)
+        //{
+        //    Vector3 towerPos = pos;
+        //    towerPos.y = pos.y - DataConfigure.TOWER_SWITCH_OFFSET_Y + mTowerInstanceOffsetY;
+        //    Instantiate(mSelectedTower.tower, towerPos, mSelectedTower.tower.transform.rotation);
+        //}
 
-        // Use this for initialization
-        void Start()
+        public GameObject AcidTowerPrefab;
+        public GameObject GatlingTowerPrefab;
+        private static GameObject mAcidTowerPrefab;
+        private static GameObject mGatlingTowerPrefab;
+
+        private void Awake()
         {
-
+            mAcidTowerPrefab = AcidTowerPrefab;
+            mGatlingTowerPrefab = GatlingTowerPrefab;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        private void BuildTower(Tower selectTower, Vector3 pos)
+        public static void BuildTower(TOWER_TYPE towerType, Vector3 pos)
         {
             Vector3 towerPos = pos;
             towerPos.y = pos.y - DataConfigure.TOWER_SWITCH_OFFSET_Y + mTowerInstanceOffsetY;
-            GameObject.Instantiate(mSelectedTower.tower, towerPos, mSelectedTower.tower.transform.rotation);
+            GameObject selectTower = SelectTowerPrefab(towerType);
+            Instantiate(selectTower, towerPos, selectTower.transform.rotation);
         }
 
-        public void OnAcid()
+        private static GameObject SelectTowerPrefab(TOWER_TYPE towerType)
         {
-            //Debug.Log(mUIManager.GetTowerSwitchPos());
-            mUIManager.InActiveTowerSwitch();
-            mSelectedTower = mAcidTowerPrefab;
-            //AcidTower acidTower = new AcidTower();
-            AcidTower acidTower = null;
-            BuildTower(acidTower, mUIManager.GetTowerSwitchPos());
+            switch (towerType)
+            {
+                case TOWER_TYPE.ACID:
+                    return mAcidTowerPrefab;
+                case TOWER_TYPE.GATLING:
+                    return mGatlingTowerPrefab;
+                default:
+                    return null;
+            }
         }
 
-        public void OnGatling()
-        {
-            mUIManager.InActiveTowerSwitch();
-            mSelectedTower = mGatlingTowerPrefab;
-            //GatlingTower gatlingTower = new GatlingTower();
-            GatlingTower gatlingTower = null;
-            BuildTower(gatlingTower, mUIManager.GetTowerSwitchPos());
-        }
+        //public void OnAcid()
+        //{
+        //    mUIManager.InActiveTowerSwitch();
+        //    mSelectedTower = mAcidTowerPrefab;
+        //    AcidTower acidTower = null;
+        //    BuildTower(acidTower, mUIManager.GetTowerSwitchPos());
+        //}
+
+        //public void OnGatling()
+        //{
+        //    mUIManager.InActiveTowerSwitch();
+        //    mSelectedTower = mGatlingTowerPrefab;
+        //    GatlingTower gatlingTower = null;
+        //    BuildTower(gatlingTower, mUIManager.GetTowerSwitchPos());
+        //}
     }
 }

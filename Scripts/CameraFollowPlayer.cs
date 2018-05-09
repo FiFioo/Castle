@@ -7,9 +7,7 @@ namespace Castle
 {
     public class CameraFollowPlayer : MonoBehaviour
     {
-
-
-        private string mPlayerTag = DataConfigure.TAG_PLAYER;
+        private string mPlayerTag = DataConfigure.TAG_HERO;
         private GameObject mPlayer;
         private Vector3 mFollowOffset;
 

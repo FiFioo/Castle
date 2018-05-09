@@ -1,37 +1,49 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine;
 
 
 namespace Castle
 {
     public class GameManager : MonoBehaviour
     {
+        public GameObject mVictoryBanner;
+        public GameObject mLoseBanner;
 
-        public Transform mEnemySpawnPoint;
-        public GameObject mEnemyPrefab;
+        public static GameManager Instance;
 
-        private Vector3 mEnemySpawnPos;
-        private float mEnemySpawnIntervalTime = 2f;
-        private float mSpawnTimeCount = 0f;
+        //private event EventHandler mGameWinEvent;
 
-        private void Start()
+        private void Awake()
         {
-            mEnemySpawnPos = mEnemySpawnPoint.position;
+            Instance = this;
         }
 
-        private void Update()
+        //public void GameWinEventRegister(EventHandler eventHandler)
+        //{
+        //    mGameWinEvent += eventHandler;
+        //}
+
+        public void BattleFinish(bool win)
         {
-            mSpawnTimeCount -= Time.deltaTime;
-            if (mSpawnTimeCount <= 0f)
-            {
-                SpawnEnemy();
-                mSpawnTimeCount = mEnemySpawnIntervalTime;
+            if (win) {
+                GameWin();
+            }
+            else {
+                GameLose();
             }
         }
 
-        private void SpawnEnemy()
+        private void GameWin()
         {
-            Instantiate(mEnemyPrefab, mEnemySpawnPos, mEnemyPrefab.transform.rotation);
+            //mGameWinEvent(this, null);
+
+            DataManager.battleLevel = DataConfigure.BATTLING_LEVEL;
+            mVictoryBanner.SetActive(true);
+        }
+
+        private void GameLose()
+        {
+            mLoseBanner.SetActive(true);
         }
     }
 }
