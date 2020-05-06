@@ -1,6 +1,26 @@
 # Castle
 Tower defence with hero game scripts 
 
+> 预览
+
+
+<img src="./images/角色模型1.png" width="60%" alt="玩家角色"> 玩家角色</img>
+
+<img src="./images/角色模型2.png" width="60%" alt="怪物"> 怪物</img>
+
+
+<img src="./images/角色模型3.png" width="60%" alt="炮塔"> 炮塔</img>
+
+<img src="./images/关卡模块1.png" width="60%" alt="关卡"> 关卡</img>
+
+<img src="./images/battle1.png" width="60%" alt="战斗1"> 战斗1</img>
+
+<img src="./images/battle2.png" width="60%" alt="战斗2"> 战斗2</img>
+
+<img src="./images/任务模块.png" width="60%" alt="任务展示"> 任务展示</img>
+
+> 功能
+
 * 已实现 ： 
   * 战斗部分 :
     * 敌人按照设定路线朝基地移动，接触基地自爆伤害基地 1 点血
